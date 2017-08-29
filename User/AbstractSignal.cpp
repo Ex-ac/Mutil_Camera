@@ -98,8 +98,9 @@ bool SpiSignal::done()
                         break;
 
                     case uchar(MasterProtocols::AnswerCommand::TakePicture):
+					{
                         errorCode = MasterProtocols::takePictureAnswer(p_PixelBase,
-                                                                       &(p_PixelBase->_picturePackInfo));
+                                                                      &(p_PixelBase->_picturePackInfo));
 					    char dirName[64] = "\0";
 						
 						numberToString(timeCount, dirName);
@@ -114,6 +115,7 @@ bool SpiSignal::done()
                                                                &(p_PixelBase->_picturePackInfo));
 							p_SignalTemp->setData(data);
 							inseratIntoSignalQueue(p_SignalTemp);
+						}
 						}
                         break;
 

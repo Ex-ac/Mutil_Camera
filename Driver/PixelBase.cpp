@@ -68,7 +68,7 @@ bool PixelBase::createSaveFile(const char *dirName, UINT sizeOfByte)
 		f_close(&_saveFile);
 		return false;
 	}
-	printf("create file %d success, byte: %ld\n", _id, sizeOfByte);
+//	printf("create file %d success, byte: %ld\n", _id, sizeOfByte);
 	_transferHasCompleted = false;
 	return true;
 }
@@ -155,31 +155,49 @@ void PixelBase::closeSaveFile()
 
 void PixelBase::sendToPCShort()
 {
-	USART_SendData(USART1, 'c');
-	this->receiveDataBuff[3] = _id;
-	for (int i = 0; i < AnswerCommandBuffSize; ++i)
+	uchar tempData[14] = {0x00};
+	tempData[0] = 'c';
+	for(uchar i = 0; i < AnswerCommandBuffSize; ++i)
 	{
-		USART_SendData(USART1, this->receiveDataBuff[i]);
+		tempData[i + 1] = this->receiveDataBuff[i];
+	}
+	
+	tempData[4] = _id;
+	for (int i = 0; i < AnswerCommandBuffSize + 1; ++i)
+	{
+		USART_SendData(USART1, tempData[i]);
+		while (USART_GetFlagStatus(USART1, USART_FLAG_TXE) != SET)
+		{
+		}
 	}
 }
 
 void PixelBase::sendToPCLong()
 {
-	USART_SendData(USART1, 'c');
-	this->receiveDataBuff[3] = _id;
-	int i = 0;
-	for ( ;i < AnswerCommandBuffSize - 2; ++i)
+	uchar temp[14 + 1024] = {0xff};
+	
+	temp[0] = 'c';
+	unsigned short i = 1;
+	for (uchar j = 0; j < AnswerCommandBuffSize - 2; ++i, ++j)
 	{
-		USART_SendData(USART1, this->receiveDataBuff[i]);
+		 temp[i] = this->receiveDataBuff[j];
 	}
-	uchar *temp = p_PackBuff->getPointToPackBuff();
-	for (int c = 0; c < 1024; ++c)
+	temp[4] = _id;
+	uchar *ptemp1 = p_PackBuff->getPointToPackBuff();
+	for (unsigned short j = 0; j < p_PackBuff->getSizeOfByte() ; i ++, j ++)
 	{
-		USART_SendData(USART1, *(temp  ++));
+		temp[i] = *(ptemp1 + j);
 	}
-	for (; i < AnswerCommandBuffSize; ++i)
+	for (uchar j = AnswerCommandBuffSize - 2; j < AnswerCommandBuffSize; ++i, ++j)
 	{
-		USART_SendData(USART1, this->receiveDataBuff[i]);
+		temp[i] = this->receiveDataBuff[j];
 	}
 	
+	for (unsigned short j = 0; j < i; ++ j)
+	{
+		USART_SendData(USART1, temp[j]);
+		while (USART_GetFlagStatus(USART1, USART_FLAG_TXE) != SET)
+		{
+		}
+	}
 }

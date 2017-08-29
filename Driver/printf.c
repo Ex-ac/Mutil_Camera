@@ -21,7 +21,7 @@ void printf_Init()
 	
 	USART_ClearFlag(USART1, USART_FLAG_TC);
 	
-	usartInitData.USART_BaudRate = 9600;
+	usartInitData.USART_BaudRate = 11520;
 	usartInitData.USART_WordLength = USART_WordLength_8b;
 	usartInitData.USART_StopBits = USART_StopBits_1;
 	usartInitData.USART_Parity = USART_Parity_No;

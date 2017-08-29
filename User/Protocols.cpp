@@ -14,16 +14,16 @@ void AbstractProtocolsTransfers::sendRequestCommand(uchar (*data)[RequestCommand
     sendData[12] = uchar(MasterProtocols::Flag::EndFlag);
 	
 	//debug
-	for (int i = 0; i < AnswerCommandBuffSize; ++i)
-	{
-		printf("%2x ", sendData[i]);
-	}
-	printf("\n");
+//	for (int i = 0; i < AnswerCommandBuffSize; ++i)
+//	{
+//		printf("%2x ", sendData[i]);
+//	}
+//	printf("\n");
 //	
-//    for (int i = 0; i < AnswerCommandBuffSize; ++i)
-//    {
-//        sendByte(sendData[i]);
-//    }
+    for (int i = 0; i < AnswerCommandBuffSize; ++i)
+    {
+        sendByte(sendData[i]);
+    }
 	
 }
 
@@ -53,11 +53,11 @@ void AbstractProtocolsTransfers::getLast2ByteCommand()
     }
 	
 	
-	for (uchar i = 0; i < AnswerCommandBuffSize; ++i)
-	{
-		printf("%2x ", receiveDataBuff[i]);
-	}
-	printf("\n");
+//	for (uchar i = 0; i < AnswerCommandBuffSize; ++i)
+//	{
+//		printf("%2x ", receiveDataBuff[i]);
+//	}
+//	printf("\n");
 }
 
 unsigned short MasterProtocols::packSize(AbstractProtocolsTransfers

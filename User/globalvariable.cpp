@@ -21,6 +21,7 @@ PixelBase *cameraList[2];
 
 
 //PixelBase初始化
-PixelBase pixelBase1(&spiMaster2, GPIO_Pin_0, GPIOA, GPIO_Pin_5, GPIOE, 0);
+PixelBase pixelBase1(&spiMaster1, GPIO_Pin_0, GPIOA, GPIO_Pin_5, GPIOE, 0);
 PixelBase pixelBase2(&spiMaster2, GPIO_Pin_14, GPIOA, GPIO_Pin_6, GPIOD, 1);
 PixelBase pixelBase3(&spiMaster3, GPIO_Pin_3, GPIOA, GPIO_Pin_7, GPIOE, 2);
+

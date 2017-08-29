@@ -306,10 +306,11 @@ void dealDMAInterrupt(SpiMaster &r_spiMaster)
 				if (p_PackBuff != nullptr)
 				{
 					p_PixelBase->sendToPCLong();
+//					p_PixelBase->sendToPCShort();
 					p_PixelBase->_packBuffQueue.push(p_PackBuff);
 					// 存储请求
-					SDSignal *sdSignal = new SDSignal(p_PixelBase);
-					inseratIntoSignalQueue(sdSignal);
+//					SDSignal *sdSignal = new SDSignal(p_PixelBase);
+//					inseratIntoSignalQueue(sdSignal);
 					//判断是否结束
 					u16 sizeOfPack = p_PackBuff->getNumberOfPack();
 					if ( p_PackBuff->getNumberOfPack() < 

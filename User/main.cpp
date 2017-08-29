@@ -90,7 +90,7 @@ int main()
 //	MasterProtocols::takePictureRequest(&pixelBase1, &data, &info);
 
 //	p_SpiSignal = new SpiSignal(&pixelBase1, false);
-//	p_SpiSignal->setData(&data);
+//	p_SpiSignal->setData(data);
 //	signalQueue.push(p_SpiSignal);
 	
 //	p_SpiSignal = new SpiSignal(&pixelBase2, false);
@@ -113,6 +113,7 @@ int main()
 			switch (uartBuff[0])
 			{
 				case 's':
+				{
 					char temp[3] = {0x00};
 					temp[0] = 's';
 					switch (uartBuff[2])
@@ -130,7 +131,7 @@ int main()
 							temp[1] = 0x02;
 							temp[2] = 0xff;
 							//处理的
-							
+					
 						break;
 						
 						default:
@@ -149,7 +150,7 @@ int main()
 						}
 					}
 				break;
-				
+				}
 				default:
 				/*
 					usartBuff[0] = 'c';
@@ -172,6 +173,7 @@ int main()
 							signalQueue.push(p_SpiSignal);
 							
 						}
+						tempU32 >>= 1;
 					}
 					if (uartBuff[6] == 0x05)
 					{
