@@ -27,9 +27,9 @@ void exti5_9Init(void)
 	gpioInitData.GPIO_Mode = GPIO_Mode_IPU;
 	gpioInitData.GPIO_Pin = GPIO_Pin_7;
 	gpioInitData.GPIO_Speed = GPIO_Speed_50MHz;
-	GPIO_Init(GPIOE, &gpioInitData);
-	GPIO_EXTILineConfig(GPIO_PortSourceGPIOE, GPIO_PinSource7);
-	EXTI_ClearITPendingBit(EXTI_Line7);
+	GPIO_Init(GPIOC, &gpioInitData);
+	GPIO_EXTILineConfig(GPIO_PortSourceGPIOC, GPIO_PinSource7);
+	EXTI_ClearITPendingBit(EXTI_Line7);        
 	
 //	GPIO_EXTILineConfig(GPIO_PortSourceGPIOE, GPIO_PinSource7);
 //	GPIO_EXTILineConfig(GPIO_PortSourceGPIOE, GPIO_PinSource8);
@@ -55,6 +55,6 @@ void exti5_9Init(void)
 	nvicInitData.NVIC_IRQChannel = EXTI9_5_IRQn;
 	nvicInitData.NVIC_IRQChannelCmd = ENABLE;
 	nvicInitData.NVIC_IRQChannelPreemptionPriority = 0;
-	nvicInitData.NVIC_IRQChannelSubPriority = 1;
+	nvicInitData.NVIC_IRQChannelSubPriority = 2;
 	NVIC_Init(&nvicInitData);
 }

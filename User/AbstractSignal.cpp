@@ -1,8 +1,6 @@
 #include "AbstractSignal.h"
 #include "globalvariable.h"
 
-#include <stdio.h>
-#include <stdlib.h>
 
 SignalQueue signalQueue(MaxNumberOfSignal);
 
@@ -33,31 +31,30 @@ bool SpiSignal::done()
 {
     bool ok = false;
     SpiSignal *p_SpiSignal = dynamic_cast<SpiSignal *>(this);
-	PixelBase *p_PixelBase = p_SpiSignal->getPointToTrager();
+    PixelBase *p_PixelBase = p_SpiSignal->getPointToTrager();
     if (!p_SpiSignal->typeIsAnswer()) //发送命令
-    { 
-        if ( p_PixelBase->_irqControlPin.isHight())
+    {
+        if (p_PixelBase->_irqControlPin.isHight())
         {
             if (p_PixelBase->selectThisSliver())
             {
                 uchar tdata[RequestCommandBuffSize] = {0x00};
                 p_SpiSignal->getData(tdata);
-				p_SpiSignal->getPointToTrager()->setHasAnswer(false);
+                p_SpiSignal->getPointToTrager()->setHasAnswer(false);
                 p_SpiSignal->getPointToTrager()->sendRequestCommand(&tdata);
-                //				p_SpiSignal->getPointToTrager()->_runningStatus = PixelBase::RunningStatus::WaitForAnswered;
                 ok = true;
                 p_PixelBase->unselectThisSliver();
             }
             else
             {
-//                printf("Wait for Spi\n");
+
                 ok = false;
                 inseratIntoSignalQueue(p_SpiSignal);
             }
         }
         else
         {
-//            printf("Wait for PixelBase\n");
+
             ok = false;
             inseratIntoSignalQueue(p_SpiSignal);
         }
@@ -66,7 +63,7 @@ bool SpiSignal::done()
     {
         if (p_SpiSignal->getPointToTrager()->selectThisSliver())
         {
-            
+
             p_PixelBase->getFirst11ByteCommand();
 
             if (MasterProtocols::packAnswerCommand(p_PixelBase) ==
@@ -98,65 +95,60 @@ bool SpiSignal::done()
                         break;
 
                     case uchar(MasterProtocols::AnswerCommand::TakePicture):
-					{
+                    {
                         errorCode = MasterProtocols::takePictureAnswer(p_PixelBase,
-                                                                      &(p_PixelBase->_picturePackInfo));
-					    char dirName[64] = "\0";
-						
-						numberToString(timeCount, dirName);
+                                                                       &(p_PixelBase->_picturePackInfo));
+                        char dirName[64] = "\0";
 
-						p_PixelBase->createSaveFile(dirName);
-						
-						if (errorCode == ErrorCode::NoneError)
-						{
-							SpiSignal *p_SignalTemp = new SpiSignal(p_PixelBase, false);
-							u8 data[RequestCommandBuffSize] = {0x00};
-							MasterProtocols::getPicturePackRequest(p_PixelBase, &data, 1,
-                                                               &(p_PixelBase->_picturePackInfo));
-							p_SignalTemp->setData(data);
-							inseratIntoSignalQueue(p_SignalTemp);
-						}
-						}
-                        break;
+                        numberToString(timeCount, dirName);
+
+                        p_PixelBase->createSaveFile(dirName);
+
+                        if (errorCode == ErrorCode::NoneError)
+                        {
+                            SpiSignal *p_SignalTemp = new SpiSignal(p_PixelBase, false);
+                            u8 data[RequestCommandBuffSize] = {0x00};
+                            MasterProtocols::getPicturePackRequest(p_PixelBase, &data, 1,
+                                                                   &(p_PixelBase->_picturePackInfo));
+                            p_SignalTemp->setData(data);
+                            inseratIntoSignalQueue(p_SignalTemp);
+                        }
+                    }
+                    break;
 
                     default:
                         errorCode = ErrorCode::UnkownError;
                     }
                     p_SpiSignal->getPointToTrager()->setHasAnswer(true);
                     ok = true;
-					
-					p_PixelBase->sendToPCShort();
-					
-					if (errorCode != ErrorCode::NoneError)
-					{
-//						printf("Code Error\n");
-						SpiSignal *p_SignalTemp = new SpiSignal(p_PixelBase, false);
-						p_SignalTemp->setData((p_PixelBase->sendDataBuff));
-						inseratIntoSignalQueue(p_SignalTemp);
-					}
+
+                    p_PixelBase->sendToPCShort();
+
+                    if (errorCode != ErrorCode::NoneError)
+                    {
+                        SpiSignal *p_SignalTemp = new SpiSignal(p_PixelBase, false);
+                        p_SignalTemp->setData((p_PixelBase->sendDataBuff));
+                        inseratIntoSignalQueue(p_SignalTemp);
+                    }
                 }
-				else
-				{
-//						printf("Code Error\n");
-						SpiSignal *p_SignalTemp = new SpiSignal(p_PixelBase, false);
-						p_SignalTemp->setData((p_PixelBase->sendDataBuff));
-						inseratIntoSignalQueue(p_SignalTemp);
-						
-						
-				}
+                else
+                {
+
+                    SpiSignal *p_SignalTemp = new SpiSignal(p_PixelBase, false);
+                    p_SignalTemp->setData((p_PixelBase->sendDataBuff));
+                    inseratIntoSignalQueue(p_SignalTemp);
+                }
                 p_SpiSignal->getPointToTrager()->unselectThisSliver();
             }
         }
         else
         {
-//            printf("Wait for Spi\n");
             ok = false;
             inseratIntoSignalQueue(p_SpiSignal);
         }
     }
-	
-	return ok;
 
+    return ok;
 }
 
 bool SDSignal::done()

@@ -3,6 +3,8 @@
 
 #include "stm32f10x.h"
 
+
+
 class ControlPin
 {
 public:

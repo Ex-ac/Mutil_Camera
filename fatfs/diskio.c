@@ -6,7 +6,7 @@
 /*-----------------------------------------------------------------------*/
 
 #include "stm32f10x.h"
-#include <stdio.h>
+//#include <stdio.h>
 #include "diskio.h"
 #include "sdio_sd.h"
 
@@ -132,7 +132,7 @@ DRESULT disk_read (
 	} 
 	else
 	{
-		printf("Err: SD_ReadMultiBlocks(,%d,%d)\r\n",sector,count);
+//		printf("Err: SD_ReadMultiBlocks(,%d,%d)\r\n",sector,count);
 		return RES_ERROR;
 	}
 }
@@ -184,7 +184,7 @@ DRESULT disk_write (
 	} 
 	else
 	{
-		printf("Err: SD_WriteBlocks(,%d,%d)\r\n",sector,count);
+//		printf("Err: SD_WriteBlocks(,%d,%d)\r\n",sector,count);
 		return RES_ERROR;
 	}
 }

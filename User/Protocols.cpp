@@ -1,6 +1,5 @@
 #include "Protocols.h"
 
-#include <stdio.h>
 
 void AbstractProtocolsTransfers::sendRequestCommand(uchar (*data)[RequestCommandBuffSize])
 {
@@ -13,13 +12,6 @@ void AbstractProtocolsTransfers::sendRequestCommand(uchar (*data)[RequestCommand
     sendData[11] = MasterProtocols::checksum(sendData + 1, AnswerCommandBuffSize - 3);
     sendData[12] = uchar(MasterProtocols::Flag::EndFlag);
 	
-	//debug
-//	for (int i = 0; i < AnswerCommandBuffSize; ++i)
-//	{
-//		printf("%2x ", sendData[i]);
-//	}
-//	printf("\n");
-//	
     for (int i = 0; i < AnswerCommandBuffSize; ++i)
     {
         sendByte(sendData[i]);
@@ -40,7 +32,6 @@ void AbstractProtocolsTransfers::getFirst11ByteCommand()
 		if (receiveDataBuff[1] == uchar(MasterProtocols::Flag::StartFlag))
 		{
 			i = 1;		
-//			printf("getFirst11ByteError\n");
 		}
     }
 }
@@ -51,13 +42,6 @@ void AbstractProtocolsTransfers::getLast2ByteCommand()
     {
         receiveDataBuff[i] = getByte();
     }
-	
-	
-//	for (uchar i = 0; i < AnswerCommandBuffSize; ++i)
-//	{
-//		printf("%2x ", receiveDataBuff[i]);
-//	}
-//	printf("\n");
 }
 
 unsigned short MasterProtocols::packSize(AbstractProtocolsTransfers

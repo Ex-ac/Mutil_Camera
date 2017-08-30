@@ -41,7 +41,7 @@ bool AbstractSpiSliver::selectThisSliver()
 void AbstractSpiSliver::unselectThisSliver()
 {
 
-	sysTickDelayUs(1);
+	sysTickDelayUs(2);
 	cSnPin.setHight(true);
     p_Master->setBusy(false);
 }

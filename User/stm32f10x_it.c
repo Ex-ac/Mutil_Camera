@@ -27,7 +27,7 @@
 #include "AbstractSignal.h"
 #include "SpiMaster.h"
 #include "sdio_sd.h"
-#include <stdio.h>
+
 /** @addtogroup STM32F10x_StdPeriph_Template
   * @{
   */
@@ -60,7 +60,14 @@ void NMI_Handler(void)
 void HardFault_Handler(void)
 {
   /* Go to infinite loop when Hard Fault exception occurs */
-	printf("Hard fault error");
+	char temp[] = "hard falut";
+	for (u8 i = 0; temp[i] != '\0'; ++i)
+	{
+		USART_SendData(USART1, temp[i]);
+		while (USART_GetFlagStatus(USART1, USART_FLAG_TXE) != SET)
+		{
+		}
+	}
 }
 
 /**
@@ -174,9 +181,7 @@ void EXTI9_5_IRQHandler()
 {
 	if (EXTI_GetITStatus(EXTI_Line5) != RESET)
 	{
-//		sysTickDelayUs(100);
-//		printf("exti in\n");
-//		printf("exti in 5\n");
+
 		if (!pixelBase1.getHasAnswer())
 		{
 			SpiSignal *p_SpiSignal = new SpiSignal(&pixelBase1, true);
@@ -187,7 +192,7 @@ void EXTI9_5_IRQHandler()
 	}
 	else if (EXTI_GetITStatus(EXTI_Line6) != RESET)
 	{
-//		printf("exti in 6\n");
+
 		if (!pixelBase2.getHasAnswer())
 		{
 			SpiSignal *p_SpiSignal = new SpiSignal(&pixelBase2, true);
@@ -198,7 +203,6 @@ void EXTI9_5_IRQHandler()
 	}
 	else if (EXTI_GetITStatus(EXTI_Line7) != RESET)
 	{
-//		printf("exti in 7\n");
 		if (!pixelBase3.getHasAnswer())
 		{
 			SpiSignal *p_SpiSignal = new SpiSignal(&pixelBase3, true);
@@ -306,11 +310,11 @@ void dealDMAInterrupt(SpiMaster &r_spiMaster)
 				if (p_PackBuff != nullptr)
 				{
 					p_PixelBase->sendToPCLong();
-//					p_PixelBase->sendToPCShort();
+
 					p_PixelBase->_packBuffQueue.push(p_PackBuff);
 					// 存储请求
-//					SDSignal *sdSignal = new SDSignal(p_PixelBase);
-//					inseratIntoSignalQueue(sdSignal);
+					SDSignal *sdSignal = new SDSignal(p_PixelBase);
+					inseratIntoSignalQueue(sdSignal);
 					//判断是否结束
 					u16 sizeOfPack = p_PackBuff->getNumberOfPack();
 					if ( p_PackBuff->getNumberOfPack() < 
@@ -324,16 +328,14 @@ void dealDMAInterrupt(SpiMaster &r_spiMaster)
 						
 						inseratIntoSignalQueue(p_SignalTemp);
 					}
-					else
-					{
-//						printf("Finished\n");
-					}
+//					else
+//					{
+//						u8 char = "Finished\n";
+//					}
 				}
 			}
 			else
 			{	
-//				printf("Data Pack Check Error\n");
-				
 				delete p_PackBuff;
 				SpiSignal *p_SignalTemp = new SpiSignal(p_PixelBase, false);
 				p_SignalTemp->setData((p_PixelBase->sendDataBuff));
@@ -379,7 +381,6 @@ void USART1_IRQHandler(void)
 				isStartFlag = false;
 			}
 		}
-		while(USART_GetFlagStatus(USART1,USART_FLAG_TXE)==Bit_RESET);	
 	}
 	
 	

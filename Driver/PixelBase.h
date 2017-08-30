@@ -38,7 +38,7 @@ public:
 	u8 getId() {return _id;}
 	bool getTransferHasCompleted() {return _transferHasCompleted;}
 	void setTransferHasCompleted(bool t) {_transferHasCompleted = t;}
-	bool createSaveFile(const char *dirName, UINT sizeOdByte);
+	bool createSaveFile(const char *dirName, u32 sizeOdByte);
 	bool createSaveFile(const char *dirName) {return createSaveFile(dirName, _picturePackInfo.sizeOfByte);} 
 	bool savePackData(PackBuff *);
 	bool savePackData() {return savePackData(_packBuffQueue.pop());}

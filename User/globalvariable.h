@@ -10,19 +10,21 @@
 
 #include "globalvariable.h"
 
+#define CameraCount 3
+
 //Spi资源
 extern SpiMaster spiMaster1;
 extern SpiMaster spiMaster2;
-extern SpiMaster spiMaster3;
+//extern SpiMaster spiMaster3;
 //PixelBase资源
 extern PixelBase pixelBase1;
 extern PixelBase pixelBase2;
 extern PixelBase pixelBase3;
 
 extern u32 timeCount;
-extern u8 cameraCount;
 
-extern PixelBase *cameraList[2];
+
+extern PixelBase *cameraList[CameraCount];
 
 extern bool hasPCRequest;
 extern u8 uartBuff[20];
